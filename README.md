@@ -8,6 +8,9 @@ Inside Cube: Demo how to put a mini universe inside of HoloCube by Merge.
 
 BoomBox: Demo how to replace HoloCube by Merge with other object and handle audio on off when the cube in the view or not in the view.
 
-Firework:Demo how to shoot stuff from the cube and view it in real world space.    
+Firework:Demo how to shoot stuff from the cube and view it in real world space.  
 
+Release Notes for version 1.01
+===========
+Fix bug one side of cube is flipped.
 
