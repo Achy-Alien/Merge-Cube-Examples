@@ -4,6 +4,7 @@ Examples of what you can develop with HoloCube by Merge.
 Release Notes for version 1.02
 ===========
 Add ExtensionMethod "FaceToCamera", extened Tranform class to re-oriented object on the HoloCube to face camera.
+
 Add Input example with scripts, demo how to do gaze + button click input in HoloCube, the input system can also handle phone/tablet screen tap input.
 
 Release Notes for version 1.01
