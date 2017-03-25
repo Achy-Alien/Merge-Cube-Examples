@@ -1,6 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * This is the SmallCubeMove class attached to our Cube_Small_Faces and 
+ * Particle objects in our InsideCubeExample scene.
+ * 
+ * This script rotates the object it's attached to on all three axes, 
+ * constantly updating their rotation, rotational strengths, and rotational
+ * directions.
+ **/
 public class SmallCubeMove : MonoBehaviour 
 {
 	bool rotateAroundX = true;
@@ -19,6 +27,9 @@ public class SmallCubeMove : MonoBehaviour
 		transform.RotateAround (transform.position,new Vector3(rotateXSpeed, rotateYSpeed, rotateZSpeed), rotateSpeed * Time.deltaTime);
 	}
 		
+	//This function updates the object's rotational speeds and directions on all axes.
+	//By checking the speed values, we can update each of the flags to inverse their 
+	//rotational directions.
 	void RotateChange()
 	{
 		if (rotateAroundX)

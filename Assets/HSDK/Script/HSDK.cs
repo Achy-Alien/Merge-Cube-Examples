@@ -43,9 +43,11 @@ public class HSDK : MonoBehaviour
 		btnSwitchViewSpritRef.gameObject.SetActive (true);
 	}
 	void SetToSingleView(){
+		InputController.instance.SwitchInput(true);
 		Vuforia.DigitalEyewearARController.Instance.SetViewerActive (false);
 	}
 	void SetToDoubleView(){
+		InputController.instance.SwitchInput(false);
 		Vuforia.DigitalEyewearARController.Instance.SetViewerActive (true);
 	}
 

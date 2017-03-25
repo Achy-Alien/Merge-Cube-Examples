@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vuforia;
 
+/**
+ * How to use: 
+ * Attach this script to the MultiTarget object that handles tracking the HoloCube.
+ * 
+ * This script calls Vuforia's TRIGGERAUTO focus mode in two second intervals
+ * while the HoloCube is tracking, allowing for the Android's camera to focus
+ * similarly to that of an iOS device.
+ * 
+ **/
 public class AndroidAutofocuser : MonoBehaviour, ITrackableEventHandler
 {
 	#if UNITY_ANDROID

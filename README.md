@@ -1,6 +1,20 @@
 # HoloCube-by-Merge-Examples
 Examples of what you can develop with HoloCube by Merge.
 
+Release Notes for version 1.03
+===========
+Add ReadMe file for each example scene.
+
+Add documentation in code.
+
+Renamed FaceToCamera script to CubeOrientation and moved under the Merge namespace.
+
+Added InputVelocity to allow detection of cube gestures.
+
+Added InputRelativeRotation to provide detect cube's relative rotation to the head facing direction.
+
+Updated Input Example scene to show usage of new Input tools.
+
 Release Notes for version 1.02
 ===========
 Add ExtensionMethod "FaceToCamera", extened Tranform class to re-oriented object on the HoloCube to face camera.

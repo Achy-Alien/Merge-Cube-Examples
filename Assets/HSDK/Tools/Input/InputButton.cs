@@ -2,10 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-public class InputButton : MonoBehaviour {
-	enum ButtonStateEnum{
+
+/**
+ * How To Use:
+ * Attach this script to any object that you wish to have receive gaze inputs from.
+ *
+ * This script mostly serves as an example of how you can handle message calls from InputController.
+ **/
+
+public class InputButton : MonoBehaviour 
+{
+	enum ButtonStateEnum
+	{
 		up,hover,down
 	}
+
 	public Sprite btnUpSprite;
 	public Sprite btnHoverSprite;
 	public Sprite btnDownSprite;
@@ -19,34 +30,36 @@ public class InputButton : MonoBehaviour {
 	bool isHoverOver = false;
 	ButtonStateEnum btnState = ButtonStateEnum.up;
 
-	void Start () {
-		if (GetComponent<SpriteRenderer> () != null) {
+	void Start () 
+	{
+		if (GetComponent<SpriteRenderer> () != null) 
+		{
 			btnTexture = GetComponent<SpriteRenderer> ();
 		}
-		if (GetComponent<AudioSource> () != null) {
+
+		if (GetComponent<AudioSource> () != null) 
+		{
 			player = GetComponent<AudioSource> ();
 		}
 	}
 
+	//This will get called by Input Controller
 	void OnClick()
 	{
 		onClick.Invoke ();
-		if (player != null) {
+
+		if (player != null) 
+		{
 			player.Play ();
 		}
+
 		btnState = ButtonStateEnum.down;
 		UpdateState ();
 		CancelInvoke ();
-		Invoke ("UnClick", .2f);
-
-	}
-	void UnClick(){
-		if (isHoverOver) {			
-			btnState = ButtonStateEnum.hover;
-			UpdateState ();
-		}
+		Invoke ("ResetState", .2f);
 	}
 
+	//This will get called by Input Controller
 	void OnHoverStart()
 	{		
 		if (!isHoverOver) 
@@ -57,6 +70,8 @@ public class InputButton : MonoBehaviour {
 			UpdateState ();
 		}
 	}
+
+	//This will get called by Input Controller
 	void OnHoverEnd()
 	{
 		isHoverOver = false;
@@ -65,25 +80,42 @@ public class InputButton : MonoBehaviour {
 		UpdateState ();
 	}
 
-	void UpdateState(){
-		if (btnTexture != null) {
-			switch (btnState) {
+	void UpdateState()
+	{
+		if (btnTexture == null)
+		{
+			return;
+		}
+
+		switch (btnState) 
+		{
 			case ButtonStateEnum.up:
-				if (btnUpSprite != null) {
+				if (btnUpSprite != null) 
+				{
 					btnTexture.sprite = btnUpSprite;
 				}
 				break;
 			case ButtonStateEnum.hover:
-				if (btnHoverSprite != null) {
+				if (btnHoverSprite != null) 
+				{
 					btnTexture.sprite = btnHoverSprite;
 				}
 				break;
 			case ButtonStateEnum.down:
-				if (btnDownSprite != null) {
+				if (btnDownSprite != null) 
+				{
 					btnTexture.sprite = btnDownSprite;
 				}
 				break;
-			}
+		}
+	}
+
+	void ResetState()
+	{
+		if (isHoverOver) 
+		{			
+			btnState = ButtonStateEnum.hover;
+			UpdateState ();
 		}
 	}
 }

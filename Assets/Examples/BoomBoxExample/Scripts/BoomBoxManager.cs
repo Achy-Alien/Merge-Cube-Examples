@@ -2,6 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * This is the BoomBoxManager script attached to the BoomBox object in the BoomBoxExample 
+ * scene we provided.
+ * 
+ * It handles the basic behaviour of our cube when it is and isn't being tracked, provides
+ * simple controls with the phone and headset, and allows the user to change the music 
+ * being played via BoomBox cube interactivity.
+ * 
+ **/
 public class BoomBoxManager : MonoBehaviour 
 {
 	public AudioSource boomBoxAudio;
@@ -20,10 +29,23 @@ public class BoomBoxManager : MonoBehaviour
 	public Transform volumeUpButton;
 	public Transform volumeDownButton;
 
+	//This is the scene's BasicTrackableEventHandler script that
+	//allows us to implement behaviour for when the cube is and
+	//isn't being tracked.	
 	public BasicTrackableEventHandler imageTarget;
 
 	void Start()
 	{
+		//In Start, we add our manager's tracking behaviours to our tracking event handler.
+
+		//In situations when you need to disable or change your currently active cube, you 
+		//should also remove any behaviours you added to the event handler to prevent any 
+		//unwanted events from occuring.
+
+		//Like so:
+		//imageTarget.OnTrackingFound -= HandleTrackingFound;
+		//imageTarget.OnTrackingLost -= HandleTrackingLost;
+
 		imageTarget.OnTrackingFound += HandleTrackingFound;
 		imageTarget.OnTrackingLost += HandleTrackingLost;
 
@@ -34,9 +56,11 @@ public class BoomBoxManager : MonoBehaviour
 
 		ChangeStation();
 	}
-
+		
 	void Update()
 	{
+		//Since the phone screen is used to interface between the user and the program,
+		//typical tap controls can be called.
 		if (Input.GetMouseButtonDown(0))
 		{
 			RaycastHit hit;

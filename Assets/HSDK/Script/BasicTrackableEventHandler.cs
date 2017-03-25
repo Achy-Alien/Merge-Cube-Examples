@@ -1,11 +1,24 @@
 ﻿using UnityEngine;
 using Vuforia;
 
+
+/**
+ * How to use: 
+ * Attach this script to the MultiTarget object within the scene.
+ * 
+ * This is the scene's BasicTrackableEventHandler script that manages events 
+ * for when the cube is and isn't being tracked. It also enables and disables
+ * an array referenced objects depending on the tracked state of the HoloCube.
+ * 
+ **/
 public class BasicTrackableEventHandler : MonoBehaviour, ITrackableEventHandler
 {
-	
 	private TrackableBehaviour mTrackableBehaviour;
 
+
+	//Events handling cube tracking and losing.
+	//Any behaviours you want to have take effect should be 
+	//passed through script reference.
 	public delegate void TrackingEvent();
 	public event TrackingEvent OnTrackingFound;
 	public event TrackingEvent OnTrackingLost;
@@ -14,6 +27,7 @@ public class BasicTrackableEventHandler : MonoBehaviour, ITrackableEventHandler
 	public GameObject[] objectsToHide;
 
 	public bool isTracking { get; private set; }
+
 
 	void Start()
 	{
