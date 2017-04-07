@@ -21,6 +21,8 @@ public class InputExampleManager : MonoBehaviour
 	public bool alwaysReMatch = false;
 	bool alreadyMatch = false;
 
+	public InputRelativeRotation rotExample;
+
 	void Start()
 	{
 		//In Start, we add our manager's tracking behaviours to our tracking event handler.
@@ -32,6 +34,7 @@ public class InputExampleManager : MonoBehaviour
 		//Like so:
 		//GetComponent<BasicTrackableEventHandler>().OnTrackingFound -= HandleTrackingFound;
 		//GetComponent<BasicTrackableEventHandler>().OnTrackingLost -= HandleTrackingLost;
+		rotExample.OnRotationChange += ShowCubeRelativeRotation;
 
 		GetComponent<BasicTrackableEventHandler>().OnTrackingFound += OnTrackingFound;
 		GetComponent<BasicTrackableEventHandler>().OnTrackingLost += OnTrackingLost;

@@ -40,7 +40,7 @@ public class FireworkManager : MonoBehaviour
 
 	void LateUpdate()
 	{
-		//The firework emitter needs to have the same position and rotation as the HoloCube 
+		//The firework emitter needs to have the same position and rotation as the cube 
 		//so that it will look like the fireworks are coming out of the top of the box.
 
 		//However, we can't parent the fireworks to the cube because we want the fireworks 

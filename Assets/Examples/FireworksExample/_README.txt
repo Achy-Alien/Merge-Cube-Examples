@@ -6,7 +6,7 @@ Goals of the scene and what you should learn from it:
 
 - You can make use your world space int your projects.
 
-- You can have objects and effects exist separate of the HoloCube.
+- You can have objects and effects exist separate of the Merge Cube.
 
 
 
