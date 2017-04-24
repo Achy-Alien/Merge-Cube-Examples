@@ -7,15 +7,21 @@ using UnityEngine.Events;
 public class GazeSpriteButton : MonoBehaviour, GazeResponder 
 {
 	private Image image;
+	private BoxCollider collider;
 	
 	public Sprite defaultState;
-	public Color defaultColor;
+	public Color defaultColor = Color.white;
 
 	public Sprite hoverState;
-	public Color hoverColor;
+	public Color hoverColor = Color.white;
 
 	public Sprite downState;
-	public Color downColor;
+	public Color downColor = Color.white;
+
+	public Sprite disabledState;
+	public Color disabledColor = Color.white;
+
+	public bool isDisabled = false;
 
 	public UnityEvent OnGazeStart;
 	public UnityEvent OnGazeEnd;
@@ -24,13 +30,38 @@ public class GazeSpriteButton : MonoBehaviour, GazeResponder
 
 	void Start()
 	{
-		image = gameObject.GetComponent<Image>();
+		if(image == null)
+			image = gameObject.GetComponent<Image>();
+		
+		if(collider == null)
+			collider = gameObject.GetComponent<BoxCollider>();
+	}
+
+	void OnValidate()
+	{
+		if(image == null)
+			image = gameObject.GetComponent<Image>();
+		
+		if(collider == null)
+			collider = gameObject.GetComponent<BoxCollider>();
+
+		if (isDisabled)
+		{
+			DisableButton();
+		}
+		else
+		{
+			EnableButton();
+		}
 	}
 
 	bool isGazing = false;
 
 	public void OnGazeEnter()
 	{
+		if (isDisabled)
+			return; 
+		
 		isGazing = true;
 
 		OnGazeStart.Invoke();
@@ -43,6 +74,9 @@ public class GazeSpriteButton : MonoBehaviour, GazeResponder
 
 	public void OnGazeExit()
 	{
+		if (isDisabled)
+			return; 
+		
 		isGazing = false; 
 
 		OnGazeEnd.Invoke();
@@ -55,6 +89,9 @@ public class GazeSpriteButton : MonoBehaviour, GazeResponder
 
 	public void OnGazeTrigger()
 	{
+		if (isDisabled)
+			return; 
+		
 		OnGazeInput.Invoke();
 
 		if(downState != null)
@@ -65,6 +102,9 @@ public class GazeSpriteButton : MonoBehaviour, GazeResponder
 
 	public void OnGazeTriggerEnd()
 	{
+		if (isDisabled)
+			return; 
+		
 		OnGazeInputEnd.Invoke();
 
 		if (isGazing && defaultState != null)
@@ -86,4 +126,26 @@ public class GazeSpriteButton : MonoBehaviour, GazeResponder
 		}
 	}
 
+
+	public void DisableButton()
+	{
+		isDisabled = true;
+		collider.enabled = false;
+
+		if (disabledState != null)
+			image.sprite = disabledState;
+
+		image.color = disabledColor;
+	}
+
+	public void EnableButton()
+	{
+		isDisabled = false;
+		collider.enabled = true;
+
+		if (defaultState != null)
+			image.sprite = defaultState;
+
+		image.color = defaultColor;
+	}
 }

@@ -4,10 +4,22 @@ using System.Collections;
 
 public class GazeCaster : MonoBehaviour 
 {
+	public static GazeCaster instance;
+	void Awake()
+	{
+		if (instance == null)
+			instance = this;
+		else if (instance != this)
+			DestroyImmediate(this.gameObject);
+	}
+
+
 	RaycastHit hit;
 	public LayerMask lMask;
 
 	bool currentlyGazing = false;
+	public bool GetCurrentGazeState(){return currentlyGazing;}
+
 	GameObject gazedObject = null;
 	GazeResponder gazeResponder = null;
 	GazeResponder pressedObject = null;
@@ -22,7 +34,9 @@ public class GazeCaster : MonoBehaviour
 	public void SwapScreenViewMode()
 	{
 		isMonoScreenMode = !isMonoScreenMode;
+//		Debug.Log("is mono screen mode? " + isMonoScreenMode);
 	}
+
 
 	void Update ()
 	{
@@ -38,16 +52,6 @@ public class GazeCaster : MonoBehaviour
 			ray.origin = this.transform.position;
 			ray.direction = this.transform.forward;
 		}
-
-		if(Input.GetMouseButtonDown(0))
-		{
-			TriggerPressed();
-		}
-
-		if(Input.GetMouseButtonUp(0))
-		{
-			TriggerReleased();
-		}
 			
 		if (Physics.Raycast (ray, out hit, 100000f, lMask)) 
 		{                                  
@@ -59,6 +63,7 @@ public class GazeCaster : MonoBehaviour
 				//Stop looking at the old guy! Tell him to go away.
 				if (gazeResponder != null)
 				{
+//					Debug.Log("Gaze End");
 					gazeResponder.OnGazeExit();
 
 					if ( OnGaze_End != null)
@@ -67,6 +72,7 @@ public class GazeCaster : MonoBehaviour
 					}
 				}
 
+//				Debug.Log("Cleaned CurGaze");
 				//Clean up for the new guy
 				currentlyGazing = false;
 				gazedObject = hit.transform.gameObject;
@@ -77,6 +83,7 @@ public class GazeCaster : MonoBehaviour
 			//I must be looking at something new, look at the new thing.
 			if (!currentlyGazing && gazedObject != null && gazeResponder != null )
 			{
+//				Debug.Log("Gaze Start");
 				gazeResponder.OnGazeEnter();
 
 				if( OnGaze_Start != null )
@@ -84,12 +91,14 @@ public class GazeCaster : MonoBehaviour
 					OnGaze_Start.Invoke();
 				}
 
+//				Debug.Log("Set CurGaze: " + gazedObject.name);
 				currentlyGazing = true;
 			}
 				
 		}
 		else
 		{
+//			Debug.Log("Gaze End");
 			//We aren't looking at anything at all. Clean up and stop looking at the previous guy
 			//We were previously looking at something last tick, so lets have it do stuff
 			if (currentlyGazing && gazeResponder != null && gazedObject != null)
@@ -101,10 +110,30 @@ public class GazeCaster : MonoBehaviour
 					OnGaze_End.Invoke();
 				}
 			}
-
+				
 			currentlyGazing = false;
 			gazedObject = null;
 			gazeResponder = null;
+		}
+
+		if(Input.GetMouseButtonDown(0))
+		{
+//			Debug.Log("TAP");
+			TriggerPressed();
+		}
+
+		if(Input.GetMouseButtonUp(0))
+		{
+//			Debug.Log("END TAP");
+			TriggerReleased();
+
+			if (isMonoScreenMode)
+			{
+//				Debug.Log("Is mono screen mode? " + isMonoScreenMode);
+				currentlyGazing = false;
+				gazedObject = null;
+				gazeResponder = null;
+			}
 		}
 	}
 

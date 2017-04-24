@@ -2,41 +2,74 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+
 using Vuforia;
 
 namespace Merge
 {		
 	public class MergeCubeSDK : MonoBehaviour 
 	{
+
+		public static MergeCubeSDK instance;
+
+		void Awake()
+		{
+			if (instance == null)
+				instance = this;
+			else if (instance != this)
+				DestroyImmediate(this.gameObject);
+		}
+
+
+		public enum ViewMode { HEADSET, FULLSCREEN };
+
+		public ViewMode viewMode = ViewMode.FULLSCREEN;
+
 		private Transform arCameraRef;
 
 		private VideoBackgroundBehaviour leftVidBackBehaviour;
 		private VideoBackgroundBehaviour rightVidBackBehaviour;
 
-		public GameObject doubleRenderSetup;
-		//	public GameObject singleRenderSetup;
-		public RenderTexture doubleViewRenderTexture;
+		public GameObject headsetViewSetup;
+		public RenderTexture headsetViewRenderTexture;
 
 		bool isActive = false;
 
-		public UnityEngine.UI.Image fsSwitchButton;
-		public UnityEngine.UI.Image fsSwitchGraphic;
-		public Sprite fsSprite;
-		public Sprite vrSprite;
+		public UnityEngine.UI.Image viewSwitchButton;
+		public UnityEngine.UI.Image viewSwitchGraphic;
+		public Sprite fullscreenSprite;
+		public Sprite headsetViewSprite;
 		public Sprite disabledSprite;
-
-		public bool isInDouble = false;
 
 		public Animator mainPanelAnimator;
 		bool menuIsOpen = false;
 
+		public delegate void ViewModeSwapEvent(bool swappedToHeadsetView);
+		public ViewModeSwapEvent OnViewModeSwap;
+
 		void Start()
 		{
 			arCameraRef = Camera.main.transform;
-			if (isInDouble)
+			if (viewMode == ViewMode.HEADSET)
 			{
-				Camera.main.targetTexture = doubleViewRenderTexture;
+				Camera.main.targetTexture = headsetViewRenderTexture;
+			}
+		}
+
+		void OnValidate()
+		{
+			if (viewMode == ViewMode.HEADSET && headsetViewRenderTexture != null)
+			{
+				Camera.main.targetTexture = headsetViewRenderTexture;
+				headsetViewSetup.SetActive(true);
+			}
+			else
+			{
+				if(Camera.main != null)
+					Camera.main.targetTexture = null;
+
+				if( headsetViewSetup != null )
+					headsetViewSetup.SetActive(false);
 			}
 		}
 
@@ -56,43 +89,53 @@ namespace Merge
 
 		public void SwitchView()
 		{
-			isInDouble = !isInDouble;
-
-			if (isInDouble) 
+			if (viewMode == ViewMode.HEADSET)
 			{
-				SetToDoubleView ();
-				fsSwitchGraphic.sprite = vrSprite;
+				viewMode = ViewMode.FULLSCREEN;
+			}
+			else
+			{
+				viewMode = ViewMode.HEADSET;
+			}
+
+			if (viewMode == ViewMode.HEADSET)
+			{
+				SetToHeadsetView ();
+				viewSwitchGraphic.sprite = headsetViewSprite;
 			} 
 			else 
 			{
-				SetToSingleView ();
-				fsSwitchGraphic.sprite = fsSprite;
+				SetToFullscreenView ();
+				viewSwitchGraphic.sprite = fullscreenSprite;
 			}
 
-			fsSwitchButton.gameObject.SetActive (false);
+			viewSwitchButton.gameObject.SetActive (false);
+
+			if (OnViewModeSwap != null)
+			{
+				OnViewModeSwap.Invoke((viewMode == ViewMode.HEADSET));
+			}
+
 			Invoke ("EnableViewChangeBtn", 0.5f);
 		}
 
 		void EnableViewChangeBtn()
 		{
-			fsSwitchButton.gameObject.SetActive (true);
+			viewSwitchButton.gameObject.SetActive (true);
 		}
 
 
 
-		void SetToSingleView()
+		void SetToFullscreenView()
 		{
 			Camera.main.targetTexture = null;
-	//		Camera.main.targetTexture = doubleViewRenderTexture;
-			doubleRenderSetup.SetActive(false);
-	//		singleRenderSetup.SetActive(true);
+			headsetViewSetup.SetActive(false);
 		}
 
-		void SetToDoubleView()
+		void SetToHeadsetView()
 		{
-			Camera.main.targetTexture = doubleViewRenderTexture;
-			doubleRenderSetup.SetActive(true);
-	//		singleRenderSetup.SetActive(false);
+			Camera.main.targetTexture = headsetViewRenderTexture;
+			headsetViewSetup.SetActive(true);
 		}
 
 
@@ -103,37 +146,29 @@ namespace Merge
 
 			if (Vuforia.CameraDevice.Instance.GetCameraDirection() == Vuforia.CameraDevice.CameraDirection.CAMERA_BACK)
 			{
-				fsSwitchButton.raycastTarget = false;
-				fsSwitchGraphic.sprite = disabledSprite;
+				viewSwitchButton.raycastTarget = false;
+				viewSwitchGraphic.sprite = disabledSprite;
 
 				Vuforia.CameraDevice.Instance.Init(CameraDevice.CameraDirection.CAMERA_FRONT);
 
-				//			Quaternion adjustedRotation = Quaternion.Euler(0f, 0f, 180f);
-				//			Camera.main.transform.rotation = adjustedRotation;
-				//			singleRenderSetup.transform.localScale = new Vector3(-1.325f, 1, 1);
-
-				SetToSingleView();
+				SetToFullscreenView();
 
 				Debug.Log("Should be front: " + Vuforia.CameraDevice.Instance.GetCameraDirection());
 			}
 			else
 			{
-				fsSwitchButton.raycastTarget = true;
-
+				viewSwitchButton.raycastTarget = true;
 				Vuforia.CameraDevice.Instance.Init(CameraDevice.CameraDirection.CAMERA_BACK);
 
-				//			Camera.main.transform.rotation = Quaternion.identity;
-				//			singleRenderSetup.transform.localScale = Vector3.one;
-
-				if (isInDouble)
+				if (viewMode == ViewMode.HEADSET)
 				{
-					fsSwitchGraphic.sprite = vrSprite;
-					SetToDoubleView();
+					viewSwitchGraphic.sprite = headsetViewSprite;
+					SetToHeadsetView();
 				}
 				else
 				{
-					fsSwitchGraphic.sprite = fsSprite;
-					SetToSingleView();
+					viewSwitchGraphic.sprite = fullscreenSprite;
+					SetToFullscreenView();
 				}
 
 				Debug.Log("Should be back: " + Vuforia.CameraDevice.Instance.GetCameraDirection());
@@ -145,7 +180,6 @@ namespace Merge
 		}
 
 	//FlashLight
-		public UnityEngine.UI.Image btnFlashLightSpritRef;
 		bool isFlashOn = false;
 
 		public void SwitchFlashLight()
@@ -172,27 +206,5 @@ namespace Merge
 			Vuforia.CameraDevice.Instance.SetFlashTorchMode (true);
 		}
 
-		public void LoadScene( string sceneName )
-		{
-			SceneManager.LoadScene(sceneName);
-		}
-
-		bool sceneMenuIsOpen = false;
-		public Animator scenePanelAnimator;
-
-		public void ToggleSceneMenu()
-		{
-			if (sceneMenuIsOpen)
-			{
-				scenePanelAnimator.Play("Close");
-			}
-			else
-			{
-				scenePanelAnimator.Play("Open");
-			}
-
-			sceneMenuIsOpen = !sceneMenuIsOpen;
-
-		}
 	}
 }
