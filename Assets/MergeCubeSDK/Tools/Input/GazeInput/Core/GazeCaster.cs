@@ -13,8 +13,8 @@ public class GazeCaster : MonoBehaviour
 			DestroyImmediate(this.gameObject);
 	}
 
-
-	RaycastHit hit;
+	[HideInInspector]
+	public RaycastHit hit;
 	public LayerMask lMask;
 
 	bool currentlyGazing = false;
@@ -53,9 +53,11 @@ public class GazeCaster : MonoBehaviour
 			ray.direction = this.transform.forward;
 		}
 			
+		Debug.DrawRay(ray.origin, ray.direction, Color.red);
+
 		if (Physics.Raycast (ray, out hit, 100000f, lMask)) 
 		{                                  
-			Debug.DrawRay(ray.origin, ray.direction);
+			//Debug.DrawRay(ray.origin, ray.direction);
 
 			//The thing we are looking at isnt the same guy!!
 			if (hit.transform.gameObject != gazedObject)

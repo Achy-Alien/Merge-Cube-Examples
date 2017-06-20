@@ -1,7 +1,15 @@
 # Merge-Cube-Examples
 Examples of what you can develop with The Merge Cube.
 
-Release Notes for version 1.04
+Release Notes for version 1.0.4
+===========
+Include MergeTutorial and IntroSequencer.
+
+Updated the MergeCubeSDK prefab to dynamically acquire the main RenderTexture.
+
+UI update.
+
+Release Notes for version 1.0.3
 ===========
 Replaced InputControl with the new GazeCaster and GazeResponder, examples of how to use the Gaze tools are included.
 
@@ -11,9 +19,6 @@ Notice: Merge Cube SDK set the view to monoscopic only, for stereoscopic use Vuf
 
 New Merge Cube SDK UI.
 
-
-Release Notes for version 1.03
-===========
 Add ReadMe file for each example scene.
 
 Add documentation in code.
@@ -26,17 +31,17 @@ Added InputRelativeRotation to provide detect cube's relative rotation to the he
 
 Updated Input Example scene to show usage of new Input tools.
 
-Release Notes for version 1.02
+Release Notes for version 1.0.2
 ===========
 Add ExtensionMethod "FaceToCamera", extened Tranform class to re-oriented object on the Merge Cube to face camera.
 
 Add Input example with scripts, demo how to do gaze + button click input in Merge Cube, the input system can also handle phone/tablet screen tap input.
 
-Release Notes for version 1.01
+Release Notes for version 1.0.1
 ===========
 Fix bug one side of cube is flipped.
 
-Release Notes for version 1.0
+Release Notes for version 1.0.0
 ===========
 Include Inside Cube, BoomBox and Firework.
 
